@@ -426,57 +426,9 @@ const generateMockResponse = (question: string) => {
   // Convert to lowercase for easier matching
   const lowerQuestion = question.toLowerCase();
   
-  // Responses for common questions
-  if (lowerQuestion.includes("hello") || lowerQuestion.includes("hi")) {
-    return "Hello! I'm your BigQuery data governance assistant. I can help you analyze costs, optimize queries, track ROI, and manage your data investments. What would you like to know about your BigQuery usage?";
-  }
-  
-  if (lowerQuestion.includes("help") || lowerQuestion.includes("what can you do")) {
-    return `I can help you with:
-
-📊 Cost Analysis
-- Track real-time spending and budget status
-- Break down costs by project, department, or query
-- Forecast future spending trends
-
-🚀 Query Optimization
-- Identify expensive and inefficient queries
-- Suggest specific SQL improvements
-- Calculate potential cost savings
-
-📈 ROI Tracking
-- Map business value to data investments
-- Score query ROI based on usage patterns
-- Flag underutilized resources
-
-🔍 Best Practices
-- Recommend partitioning and clustering strategies
-- Optimize table schemas and data organization
-- Suggest cost-effective query patterns
-
-Just ask me a specific question about any of these areas!`;
-  }
-  
-  if (lowerQuestion.includes("spend") || lowerQuestion.includes("cost")) {
-    if (lowerQuestion.includes("yesterday")) {
-      return `Yesterday's BigQuery spend was $324.56, which is 12% higher than your daily average of $289.78.
-
-Breakdown by department:
-- Marketing: $142.34 (43.8%)
-- Analytics: $98.67 (30.4%)
-- Sales: $54.23 (16.7%)
-- Operations: $29.32 (9.1%)
-
-Top cost drivers:
-1. Customer Behavior Analysis query ($78.45)
-2. Marketing Attribution Model ($45.67)
-3. Sales Pipeline Report ($32.89)
-
-Would you like me to suggest optimization opportunities for these queries?`;
-    }
-    
-    if (lowerQuestion.includes("today")) {
-      return `Your BigQuery spend so far today is $186.34 (as of 2:00 PM PT).
+  // Today's spend question
+  if (lowerQuestion.includes("spend") && lowerQuestion.includes("today")) {
+    return `Your BigQuery spend so far today is $186.34 (as of ${new Date().toLocaleTimeString()}).
 
 Current status:
 - Tracking 8% below daily average
@@ -487,11 +439,311 @@ Recent cost spikes:
 - Marketing campaign analysis (+$45.23 at 10:30 AM)
 - Product analytics batch job (+$32.45 at 1:15 PM)
 
-⚠️ Alert: The Marketing campaign analysis query is using a cross join that could be optimized to reduce costs by ~35%. Would you like me to show you the suggested query improvements?`;
-    }
-    
-    if (lowerQuestion.includes("month") || lowerQuestion.includes("monthly")) {
-      return `Your BigQuery spend for March 2024 is $4,256.78 so far (12% under budget).
+⚠️ Alert: The Marketing campaign analysis query is using a cross join that could be optimized to reduce costs by ~35%.
+
+Would you like me to show you the suggested query improvements?`;
+  }
+  
+  // Optimization opportunities
+  if (lowerQuestion.includes("optimization") || (lowerQuestion.includes("what") && lowerQuestion.includes("opportunities"))) {
+    return `I've identified several optimization opportunities that could save you $1,245.67/month:
+
+1. 🔴 High Impact: Add partitioning to customer_events table
+   - Current cost: $420.56/month
+   - Potential savings: 85%
+   - Implementation: Medium complexity
+   - Table size: 2.3TB
+   
+2. 🔴 High Impact: Optimize daily_user_activity query
+   - Current cost: $320.45/month
+   - Potential savings: 72%
+   - Implementation: High complexity
+   - Issue: Inefficient cross join
+   
+3. 🟡 Medium Impact: Implement caching for product_inventory
+   - Current cost: $215.78/month
+   - Potential savings: 56%
+   - Implementation: Low complexity
+   - Quick win opportunity
+
+4. 🟡 Medium Impact: Add clustering to marketing_events
+   - Current cost: $156.23/month
+   - Potential savings: 42%
+   - Implementation: Medium complexity
+   - Table size: 1.5TB
+
+Would you like me to:
+1. Show detailed implementation steps for any opportunity?
+2. Generate the optimization SQL?
+3. Create an implementation timeline?`;
+  }
+  
+  // ROI breakdown by department
+  if (lowerQuestion.includes("roi") && lowerQuestion.includes("department")) {
+    return `Here's your ROI breakdown by department:
+
+1. Marketing: 87/100 ⭐
+   - Monthly spend: $1,856.23
+   - Direct revenue impact: $12,450
+   - Key queries: Campaign Attribution, Customer Segmentation
+   - Optimization score: 92%
+
+2. Sales: 82/100 ⭐
+   - Monthly spend: $1,234.56
+   - Pipeline contribution: $8,760
+   - Key queries: Lead Scoring, Deal Analytics
+   - Optimization score: 88%
+
+3. Customer Success: 76/100 📈
+   - Monthly spend: $978.45
+   - Retention impact: $5,890
+   - Key queries: Churn Prediction, Usage Analytics
+   - Optimization score: 81%
+
+4. Operations: 74/100 📈
+   - Monthly spend: $856.34
+   - Cost savings: $4,320
+   - Key queries: Inventory Management, Supply Chain
+   - Optimization score: 79%
+
+5. Analytics: 58/100 ⚠️
+   - Monthly spend: $1,532.67
+   - Undefined value: Several queries
+   - Key queries: Historical Analysis, Data Exports
+   - Optimization score: 62%
+
+Recommendations:
+1. Document business impact for Analytics queries
+2. Implement result caching for reports
+3. Archive unused historical data
+
+Would you like a detailed plan for improving any department's ROI score?`;
+  }
+  
+  // Longest-running queries
+  if (lowerQuestion.includes("longest") && lowerQuestion.includes("queries")) {
+    return `Here are your longest-running queries:
+
+1. "Historical User Behavior Analysis"
+   ⏱️ Avg. runtime: 45 minutes
+   💾 Data scanned: 2.1TB
+   📊 Department: Analytics
+   ⚠️ Issue: No partitioning on date range
+   
+2. "Monthly Customer Segmentation"
+   ⏱️ Avg. runtime: 38 minutes
+   💾 Data scanned: 1.8TB
+   📊 Department: Marketing
+   ⚠️ Issue: Inefficient JOIN operations
+   
+3. "Product Usage Trends"
+   ⏱️ Avg. runtime: 32 minutes
+   💾 Data scanned: 1.5TB
+   📊 Department: Product
+   ⚠️ Issue: Multiple self-joins
+   
+4. "Revenue Attribution Model"
+   ⏱️ Avg. runtime: 28 minutes
+   💾 Data scanned: 1.2TB
+   📊 Department: Sales
+   ⚠️ Issue: Complex window functions
+   
+5. "Customer Churn Prediction"
+   ⏱️ Avg. runtime: 25 minutes
+   💾 Data scanned: 950GB
+   📊 Department: Customer Success
+   ⚠️ Issue: Unoptimized subqueries
+
+Optimization recommendations:
+1. Add date-based partitioning to main tables
+2. Implement query result caching
+3. Break down complex queries into smaller steps
+4. Use materialized views for common computations
+
+Would you like to see the optimization plan for any of these queries?`;
+  }
+  
+  // Monthly spend projection
+  if (lowerQuestion.includes("monthly") && lowerQuestion.includes("projection")) {
+    return `Based on current trends, here's your monthly spend projection:
+
+Current Month (November):
+- Actual spend to date: $4,256.78
+- Projected total: $5,890.45
+- Budget: $6,000.00
+- Status: On track (2% under budget)
+
+Trend Analysis:
+- October: $5,123.67
+- September: $4,892.45
+- August: $4,588.32
+- 3-month trend: +8.4%
+
+Key Drivers:
+1. Marketing campaigns (+15% MoM)
+   - Black Friday campaign planning
+   - New product launch analytics
+   
+2. Sales analytics (+12% MoM)
+   - Enhanced lead scoring models
+   - Real-time pipeline analytics
+   
+3. Product telemetry (+5% MoM)
+   - New feature tracking
+   - User behavior analysis
+
+Cost Control Measures:
+1. Implement query caching: -$215/month
+2. Optimize large tables: -$420/month
+3. Adjust refresh frequencies: -$180/month
+
+Would you like to:
+1. See detailed cost breakdown?
+2. View optimization recommendations?
+3. Adjust budget allocations?`;
+  }
+  
+  // Tables to partition
+  if (lowerQuestion.includes("tables") && lowerQuestion.includes("partition")) {
+    return `Here are the top tables that would benefit from partitioning:
+
+1. customer_events (2.3TB)
+   - Current monthly cost: $420.56
+   - Potential savings: 85%
+   - Recommended partition: DATE(event_timestamp)
+   - Partition expiration: 90 days
+   - Priority: HIGH ⚠️
+
+2. marketing_events (1.5TB)
+   - Current monthly cost: $285.34
+   - Potential savings: 75%
+   - Recommended partition: DATE(campaign_date)
+   - Partition expiration: 180 days
+   - Priority: HIGH ⚠️
+
+3. product_analytics (980GB)
+   - Current monthly cost: $178.92
+   - Potential savings: 65%
+   - Recommended partition: DATE(usage_date)
+   - Partition expiration: 60 days
+   - Priority: MEDIUM
+
+4. user_sessions (750GB)
+   - Current monthly cost: $156.78
+   - Potential savings: 60%
+   - Recommended partition: DATE(session_start)
+   - Partition expiration: 30 days
+   - Priority: MEDIUM
+
+Implementation SQL for customer_events:
+\`\`\`sql
+ALTER TABLE customer_events
+SET OPTIONS (
+  partition_by = DATE(event_timestamp),
+  partition_expiration_days = 90
+)
+\`\`\`
+
+Would you like me to:
+1. Generate partition SQL for other tables?
+2. Show implementation timeline?
+3. Estimate cost savings impact?`;
+  }
+  
+  // Where to save the most money
+  if (lowerQuestion.includes("save") && lowerQuestion.includes("money")) {
+    return `I've identified several cost-saving opportunities totaling $1,575/month:
+
+1. Table Partitioning: $875/month savings
+   - customer_events: $420 savings
+   - marketing_events: $285 savings
+   - product_analytics: $170 savings
+   Implementation time: 2-3 hours
+   Risk level: Low
+
+2. Query Optimization: $535/month savings
+   - Fix cross joins: $320 savings
+   - Add proper filters: $215 savings
+   Implementation time: 4-6 hours
+   Risk level: Medium
+
+3. Caching Strategy: $165/month savings
+   - Report queries: $95 savings
+   - Dashboard queries: $70 savings
+   Implementation time: 1-2 hours
+   Risk level: Low
+
+Priority order:
+1. Implement caching (Quick win)
+2. Add table partitioning (Best ROI)
+3. Optimize queries (Requires testing)
+
+Would you like me to:
+1. Generate implementation SQL?
+2. Create a rollout schedule?
+3. Show detailed cost analysis?`;
+  }
+  
+  // Compare this month's spend to last month
+  if (lowerQuestion.includes("compare") && lowerQuestion.includes("month")) {
+    return `Here's your month-over-month spend comparison:
+
+Current Month (November):
+$4,256.78 spent to date
+- 12% under budget
+- 15 days remaining
+- Projected: $5,890.45
+
+vs. Last Month (October): $5,123.67
+📉 17% decrease in spend
+
+Key Changes:
+1. Query Optimizations
+   - Implemented partitioning: -$420
+   - Query caching: -$215
+   - Total savings: $635
+
+2. Department Changes
+   Marketing: $1,856 → $1,542 (↓17%)
+   - Optimized campaign analytics
+   - Implemented result caching
+   
+   Sales: $1,234 → $1,156 (↓6%)
+   - Reduced redundant queries
+   - Better data filtering
+   
+   Analytics: $1,532 → $1,245 (↓19%)
+   - Archived old reports
+   - Optimized refresh schedules
+
+3. Performance Improvements
+   - Avg query runtime: 45s → 32s
+   - Data scanned: -28%
+   - Cache hit rate: 65% (↑15%)
+
+Would you like to:
+1. See detailed cost breakdown?
+2. View trending analysis?
+3. Get more optimization suggestions?`;
+  }
+  
+  // Default response for other questions
+  return `I understand you're asking about "${question}". To provide the most accurate information, could you specify:
+
+1. The time period you're interested in?
+2. Any specific projects or departments?
+3. Whether you want cost, performance, or ROI metrics?
+
+I can help you with:
+- Cost analysis and optimization
+- Query performance improvements
+- ROI tracking and enhancement
+- Best practices implementation
+
+Just let me know what specific aspect you'd like to explore!`;
+};
+
+// ... rest of the code ...
 
 Month-over-Month comparison:
 - February 2024: $4,588.32
