@@ -1040,7 +1040,7 @@ function App() {
           <header className="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <img 
-                src="/bigquery-logo.png" 
+                src="https://www.gstatic.com/analytics-suite/header/suite/v2/ic_bigquery.svg"
                 alt="QuerySense Logo" 
                 className="h-8 w-8 object-contain"
               />
