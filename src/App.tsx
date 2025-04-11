@@ -1208,7 +1208,11 @@ function App() {
                           xLabelsVisibility={(index: number) => index % 2 === 0}
                           yLabelWidth={35}
                           cellStyle={(background: string, value: number, min: number, max: number) => ({
-                            background: `rgb(${Math.floor(255 - (value / 100) * 255)}, ${Math.floor(255 - (value / 100) * 255)}, ${Math.floor(255 - (value / 100) * 255)})`,
+                            background: value < 20 ? '#86efac' :  // Very light green
+                                       value < 40 ? '#22c55e' :  // Light green
+                                       value < 60 ? '#fde047' :  // Yellow
+                                       value < 80 ? '#f97316' :  // Orange
+                                       '#dc2626',                // Red
                             fontSize: '11px',
                             color: value > 50 ? '#fff' : '#000',
                             padding: '4px',
@@ -1222,13 +1226,17 @@ function App() {
                       <div className="flex items-center justify-center mt-2 text-xs text-gray-500">
                         <span>less activity</span>
                         <div className="flex mx-2">
-                          {Array.from({ length: 5 }, (_, i) => (
+                          {[
+                            '#86efac', // Very light green
+                            '#22c55e', // Light green
+                            '#fde047', // Yellow
+                            '#f97316', // Orange
+                            '#dc2626'  // Red
+                          ].map((color, i) => (
                             <div
                               key={i}
                               className="w-4 h-4"
-                              style={{
-                                backgroundColor: `rgb(${255 - (i * 51)}, ${255 - (i * 51)}, ${255 - (i * 51)})`
-                              }}
+                              style={{ backgroundColor: color }}
                             />
                           ))}
                         </div>
