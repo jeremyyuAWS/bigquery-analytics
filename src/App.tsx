@@ -1180,47 +1180,76 @@ function App() {
                       <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
                           <ScatterChart
-                            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                            margin={{ top: 10, right: 10, bottom: 20, left: 40 }}
                           >
-                            <CartesianGrid opacity={0.15} />
+                            <CartesianGrid opacity={0.1} />
                             <XAxis 
                               type="category"
                               dataKey="hour"
                               name="Hour"
                               tick={{ fontSize: 10 }}
                               tickFormatter={(value) => value.split(':')[0]}
+                              interval={2}
                             />
                             <YAxis 
                               type="category"
                               dataKey="day"
                               name="Day"
-                              tick={{ fontSize: 12 }}
+                              tick={{ fontSize: 11 }}
+                              width={35}
+                              reversed
                             />
                             <Tooltip 
-                              cursor={{ strokeDasharray: '3 3' }}
-                              formatter={(value, name, props) => {
-                                if (name === 'value') {
-                                  return [`${value} seconds avg.`, 'Execution Time'];
-                                }
-                                return [`${value} queries`, 'Query Count'];
+                              cursor={false}
+                              formatter={(value, name) => {
+                                return [`${value} queries`, name === 'value' ? 'Activity' : ''];
+                              }}
+                              contentStyle={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                                border: 'none',
+                                borderRadius: '4px',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                                padding: '8px'
                               }}
                             />
                             <Scatter 
                               name="value"
                               data={syntheticData.queryHeatmapData}
-                              fill="#8884d8"
-                              shape="circle"
-                            >
-                              {syntheticData.queryHeatmapData.map((entry, index) => (
-                                <Cell 
-                                  key={`cell-${index}`}
-                                  fill={entry.value > 60 ? '#f87171' : entry.value > 30 ? '#facc15' : '#4ade80'}
-                                  opacity={0.7 + (entry.value / 100) * 0.3}
-                                />
-                              ))}
-                            </Scatter>
+                              shape={(props) => {
+                                const { x, y, width, height, value } = props;
+                                return (
+                                  <rect
+                                    x={x - 10}
+                                    y={y - 10}
+                                    width={20}
+                                    height={20}
+                                    fill={
+                                      value > 80 ? '#4a5568' :
+                                      value > 60 ? '#718096' :
+                                      value > 40 ? '#a0aec0' :
+                                      value > 20 ? '#cbd5e0' :
+                                      '#edf2f7'
+                                    }
+                                    opacity={0.9}
+                                  />
+                                );
+                              }}
+                            />
                           </ScatterChart>
                         </ResponsiveContainer>
+                      </div>
+                      <div className="flex items-center justify-center mt-2 text-xs text-gray-500">
+                        <span>less time spent on activity</span>
+                        <div className="flex mx-2">
+                          {['#edf2f7', '#cbd5e0', '#a0aec0', '#718096', '#4a5568'].map((color, i) => (
+                            <div
+                              key={i}
+                              className="w-4 h-4"
+                              style={{ backgroundColor: color }}
+                            />
+                          ))}
+                        </div>
+                        <span>more time spent on activity</span>
                       </div>
                     </div>
                   </div>
