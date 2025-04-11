@@ -170,21 +170,32 @@ const generateSyntheticData = () => {
     
     return days.flatMap(day => 
       hours.map(hour => {
-        // Business hours have more activity
+        // Simulate more Grafana-like patterns
         let baseValue = 0;
+        
+        // Create wave patterns throughout the day
+        const timeOfDay = Math.sin((hour / 24) * Math.PI * 2) * 50 + 50;
+        
+        // Add weekly patterns
+        const weekdayFactor = day === 'Sat' || day === 'Sun' ? 0.3 : 1;
+        
+        // Add some randomness
+        const noise = Math.random() * 30;
+        
+        // Combine factors
         if (hour >= 9 && hour <= 17 && day !== 'Sat' && day !== 'Sun') {
-          baseValue = 20 + Math.random() * 80;
-        } else if ((hour >= 7 && hour <= 19) || (day !== 'Sat' && day !== 'Sun')) {
-          baseValue = 10 + Math.random() * 30;
+          baseValue = (timeOfDay + noise) * weekdayFactor * 1.5;
+        } else if ((hour >= 7 && hour <= 19)) {
+          baseValue = (timeOfDay + noise) * weekdayFactor;
         } else {
-          baseValue = Math.random() * 15;
+          baseValue = (timeOfDay + noise) * weekdayFactor * 0.5;
         }
         
         return {
           day,
           hour: `${hour}:00`,
-          value: Math.round(baseValue),
-          queries: Math.round(baseValue / 5)
+          value: Math.round(Math.max(0, Math.min(100, baseValue))),
+          queries: Math.round(baseValue / 3)
         };
       })
     );
