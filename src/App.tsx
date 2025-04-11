@@ -1325,48 +1325,109 @@ function App() {
                       
                       <div className="bg-white rounded-lg shadow p-4 md:p-6">
                         <h3 className="font-semibold mb-4">Query Execution Time Heatmap</h3>
-                        <div style={{ height: '400px', width: '100%' }}>
-                          <HeatMap
-                            xLabels={syntheticData.queryHeatmapData.xLabels}
-                            yLabels={syntheticData.queryHeatmapData.yLabels}
-                            data={syntheticData.queryHeatmapData.data}
-                            xLabelsLocation="bottom"
-                            xLabelsVisibility={(index: number) => index % 2 === 0}
-                            yLabelWidth={35}
-                            cellStyle={(background: string, value: number, min: number, max: number) => ({
-                              background: value < 20 ? '#86efac' :  // Very light green
-                                         value < 40 ? '#22c55e' :  // Light green
-                                         value < 60 ? '#fde047' :  // Yellow
-                                         value < 80 ? '#f97316' :  // Orange
-                                         '#dc2626',                // Red
-                              fontSize: '11px',
-                              color: value > 50 ? '#fff' : '#000',
-                              padding: '4px',
-                              textAlign: 'center',
-                              cursor: 'pointer'
-                            })}
-                            cellRender={(value: number) => value ? value.toString() : ''}
-                            title={(value: number) => `${value} queries`}
-                          />
-                        </div>
-                        <div className="flex items-center justify-center mt-2 text-xs text-gray-500">
-                          <span>less activity</span>
-                          <div className="flex mx-2">
-                            {[
-                              '#86efac', // Very light green
-                              '#22c55e', // Light green
-                              '#fde047', // Yellow
-                              '#f97316', // Orange
-                              '#dc2626'  // Red
-                            ].map((color, i) => (
-                              <div
-                                key={i}
-                                className="w-4 h-4"
-                                style={{ backgroundColor: color }}
-                              />
-                            ))}
+                        <div className="relative" style={{ height: '400px', width: '100%', overflow: 'hidden' }}>
+                          <div className="sticky top-0 z-10">
+                            <HeatMap
+                              xLabels={syntheticData.queryHeatmapData.xLabels}
+                              yLabels={syntheticData.queryHeatmapData.yLabels}
+                              data={syntheticData.queryHeatmapData.data}
+                              xLabelsLocation="bottom"
+                              xLabelsVisibility={(index: number) => index % 2 === 0}
+                              yLabelWidth={50}
+                              cellStyle={(background: string, value: number, min: number, max: number) => ({
+                                background: value === 0 ? '#f3f4f6' :  // Gray for no activity
+                                           value < 20 ? '#86efac' :    // Very light green
+                                           value < 40 ? '#22c55e' :    // Light green
+                                           value < 60 ? '#fde047' :    // Yellow
+                                           value < 80 ? '#f97316' :    // Orange
+                                           '#dc2626',                  // Red
+                                fontSize: '11px',
+                                color: value > 50 ? '#fff' : '#000',
+                                padding: '8px',
+                                textAlign: 'center',
+                                cursor: 'pointer',
+                                border: '1px solid #fff',
+                                borderRadius: '4px',
+                                transition: 'all 0.3s ease'
+                              })}
+                              cellRender={(value: number) => value ? value.toString() : '-'}
+                              title={(value: number) => `${value} queries`}
+                            />
                           </div>
-                          <span>more activity</span>
+                        </div>
+                        
+                        {/* Legend and Additional Insights */}
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Color Scale Legend */}
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <h4 className="text-sm font-medium text-gray-700 mb-2">Query Volume</h4>
+                            <div className="flex items-center">
+                              <div className="flex-1">
+                                <div className="flex justify-between mb-1">
+                                  <span className="text-xs text-gray-500">Low</span>
+                                  <span className="text-xs text-gray-500">High</span>
+                                </div>
+                                <div className="h-3 flex rounded-full overflow-hidden">
+                                  {[
+                                    '#86efac', // Very light green
+                                    '#22c55e', // Light green
+                                    '#fde047', // Yellow
+                                    '#f97316', // Orange
+                                    '#dc2626'  // Red
+                                  ].map((color, i) => (
+                                    <div
+                                      key={i}
+                                      className="flex-1"
+                                      style={{ backgroundColor: color }}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Key Insights */}
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <h4 className="text-sm font-medium text-gray-700 mb-2">Key Insights</h4>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                              <li className="flex items-center">
+                                <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                                Peak hours: 2-4 PM on weekdays
+                              </li>
+                              <li className="flex items-center">
+                                <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                                Low activity: Weekends & early morning
+                              </li>
+                              <li className="flex items-center">
+                                <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                Moderate load: 9-11 AM daily
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        {/* Time Distribution Summary */}
+                        <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="bg-indigo-50 p-3 rounded-lg">
+                            <div className="text-sm font-medium text-indigo-800">Peak Time</div>
+                            <div className="text-lg font-semibold text-indigo-900">2:00 PM</div>
+                            <div className="text-xs text-indigo-600">Avg. 85 queries/hour</div>
+                          </div>
+                          <div className="bg-green-50 p-3 rounded-lg">
+                            <div className="text-sm font-medium text-green-800">Quietest Time</div>
+                            <div className="text-lg font-semibold text-green-900">4:00 AM</div>
+                            <div className="text-xs text-green-600">Avg. 12 queries/hour</div>
+                          </div>
+                          <div className="bg-yellow-50 p-3 rounded-lg">
+                            <div className="text-sm font-medium text-yellow-800">Busiest Day</div>
+                            <div className="text-lg font-semibold text-yellow-900">Wednesday</div>
+                            <div className="text-xs text-yellow-600">Avg. 642 queries/day</div>
+                          </div>
+                          <div className="bg-red-50 p-3 rounded-lg">
+                            <div className="text-sm font-medium text-red-800">High Load Hours</div>
+                            <div className="text-lg font-semibold text-red-900">6</div>
+                            <div className="text-xs text-red-600">&gt;75 queries/hour</div>
+                          </div>
                         </div>
                       </div>
                     </div>
