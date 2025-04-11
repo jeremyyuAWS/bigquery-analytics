@@ -1224,13 +1224,15 @@ function App() {
                                     width={20}
                                     height={20}
                                     fill={
-                                      value > 80 ? '#4a5568' :
-                                      value > 60 ? '#718096' :
-                                      value > 40 ? '#a0aec0' :
-                                      value > 20 ? '#cbd5e0' :
-                                      '#edf2f7'
+                                      value > 90 ? '#166534' : // dark green
+                                      value > 75 ? '#22c55e' : // medium green
+                                      value > 60 ? '#86efac' : // light green
+                                      value > 45 ? '#fef9c3' : // light yellow
+                                      value > 30 ? '#fca5a5' : // light red
+                                      value > 15 ? '#ef4444' : // medium red
+                                      '#991b1b'   // dark red
                                     }
-                                    opacity={0.9}
+                                    opacity={0.85}
                                   />
                                 );
                               }}
@@ -1239,9 +1241,9 @@ function App() {
                         </ResponsiveContainer>
                       </div>
                       <div className="flex items-center justify-center mt-2 text-xs text-gray-500">
-                        <span>less time spent on activity</span>
+                        <span>less activity</span>
                         <div className="flex mx-2">
-                          {['#edf2f7', '#cbd5e0', '#a0aec0', '#718096', '#4a5568'].map((color, i) => (
+                          {['#991b1b', '#ef4444', '#fca5a5', '#fef9c3', '#86efac', '#22c55e', '#166534'].map((color, i) => (
                             <div
                               key={i}
                               className="w-4 h-4"
@@ -1249,7 +1251,7 @@ function App() {
                             />
                           ))}
                         </div>
-                        <span>more time spent on activity</span>
+                        <span>more activity</span>
                       </div>
                     </div>
                   </div>
