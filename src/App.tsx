@@ -1039,11 +1039,17 @@ function App() {
           {/* Top navigation */}
           <header className="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <img src="/images/bigquery-logo.png" alt="QuerySense Logo" className="h-8 w-8" />
-              <h1 className="text-xl font-semibold text-gray-900">
-                QuerySense
-                <span className="text-sm font-normal text-gray-500 ml-2">Smart BigQuery Analytics</span>
-              </h1>
+              <img 
+                src="/bigquery-logo.png" 
+                alt="QuerySense Logo" 
+                className="h-8 w-8 object-contain"
+              />
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">
+                  QuerySense
+                </h1>
+                <p className="text-sm text-gray-500">Smart BigQuery Analytics</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               {/* Help Button (Welcome Modal Trigger) */}
