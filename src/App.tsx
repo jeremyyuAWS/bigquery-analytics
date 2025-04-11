@@ -428,71 +428,258 @@ const generateMockResponse = (question: string) => {
   
   // Responses for common questions
   if (lowerQuestion.includes("hello") || lowerQuestion.includes("hi")) {
-    return "Hello! How can I help you with your BigQuery data governance today?";
+    return "Hello! I'm your BigQuery data governance assistant. I can help you analyze costs, optimize queries, track ROI, and manage your data investments. What would you like to know about your BigQuery usage?";
   }
   
   if (lowerQuestion.includes("help") || lowerQuestion.includes("what can you do")) {
-    return "I can help you with:\n\n- Analyzing BigQuery spending and usage\n- Identifying expensive queries\n- Suggesting cost optimizations\n- Tracking ROI of your data investments\n- Monitoring query performance\n\nJust ask me a specific question about your data usage!";
+    return `I can help you with:
+
+📊 Cost Analysis
+- Track real-time spending and budget status
+- Break down costs by project, department, or query
+- Forecast future spending trends
+
+🚀 Query Optimization
+- Identify expensive and inefficient queries
+- Suggest specific SQL improvements
+- Calculate potential cost savings
+
+📈 ROI Tracking
+- Map business value to data investments
+- Score query ROI based on usage patterns
+- Flag underutilized resources
+
+🔍 Best Practices
+- Recommend partitioning and clustering strategies
+- Optimize table schemas and data organization
+- Suggest cost-effective query patterns
+
+Just ask me a specific question about any of these areas!`;
   }
   
   if (lowerQuestion.includes("spend") || lowerQuestion.includes("cost")) {
     if (lowerQuestion.includes("yesterday")) {
-      return "Your BigQuery spend for yesterday was $324.56, which is 12% higher than your daily average of $289.78.";
-    }
-    if (lowerQuestion.includes("today")) {
-      return "Your BigQuery spend so far today is $186.34, which is tracking 8% below your daily average.";
-    }
-    if (lowerQuestion.includes("month") || lowerQuestion.includes("monthly")) {
-      return "Your BigQuery spend for this month is $4,256.78 so far, which is 12% under your monthly budget of $5,000.";
-    }
-    if (lowerQuestion.includes("year") || lowerQuestion.includes("yearly") || lowerQuestion.includes("annual")) {
-      return "Your annual BigQuery spend is projected to be $48,975.20 based on current usage patterns, which is within your annual budget of $60,000.";
-    }
-    if (lowerQuestion.includes("projection") || lowerQuestion.includes("forecast")) {
-      return "Based on current usage patterns, I'm projecting a monthly spend of $5,123.45, which is 2.5% above your monthly budget of $5,000. The increase appears to be driven by new Marketing analytics queries.";
-    }
-    if (lowerQuestion.includes("compare") && lowerQuestion.includes("last month")) {
-      return "This month's spend ($4,256.78) is 7.2% lower than last month ($4,588.32). The main savings came from optimizing your 'Customer Behavior Analytics' queries, which reduced their cost by 35%.";
+      return `Yesterday's BigQuery spend was $324.56, which is 12% higher than your daily average of $289.78.
+
+Breakdown by department:
+- Marketing: $142.34 (43.8%)
+- Analytics: $98.67 (30.4%)
+- Sales: $54.23 (16.7%)
+- Operations: $29.32 (9.1%)
+
+Top cost drivers:
+1. Customer Behavior Analysis query ($78.45)
+2. Marketing Attribution Model ($45.67)
+3. Sales Pipeline Report ($32.89)
+
+Would you like me to suggest optimization opportunities for these queries?`;
     }
     
-    // Default cost response
-    return "Your current BigQuery spend is $4,256.78 for this month, which is 12% under your monthly budget.";
+    if (lowerQuestion.includes("today")) {
+      return `Your BigQuery spend so far today is $186.34 (as of 2:00 PM PT).
+
+Current status:
+- Tracking 8% below daily average
+- 62% of daily budget consumed
+- 15 active project workloads
+
+Recent cost spikes:
+- Marketing campaign analysis (+$45.23 at 10:30 AM)
+- Product analytics batch job (+$32.45 at 1:15 PM)
+
+⚠️ Alert: The Marketing campaign analysis query is using a cross join that could be optimized to reduce costs by ~35%. Would you like me to show you the suggested query improvements?`;
+    }
+    
+    if (lowerQuestion.includes("month") || lowerQuestion.includes("monthly")) {
+      return `Your BigQuery spend for March 2024 is $4,256.78 so far (12% under budget).
+
+Month-over-Month comparison:
+- February 2024: $4,588.32
+- January 2024: $4,892.45
+- December 2023: $5,123.67
+
+Key insights:
+✅ Query optimization efforts saved $332.54 (7.2%) vs. last month
+⚠️ Data scanning increased 15% in Marketing projects
+🎯 On track to stay under monthly budget of $5,000
+
+Top 3 cost reduction opportunities:
+1. Add partitioning to customer_events table (potential savings: $215/month)
+2. Optimize Marketing attribution queries (potential savings: $178/month)
+3. Implement query result caching (potential savings: $145/month)
+
+Would you like me to help you implement any of these optimizations?`;
+    }
   }
   
   if (lowerQuestion.includes("query") || lowerQuestion.includes("queries")) {
-    if (lowerQuestion.includes("expensive") || lowerQuestion.includes("costliest") || lowerQuestion.includes("costly")) {
-      return "Here are your top 5 costliest queries for this month:\n\n1. \"Customer Behavior Analytics\" - $215.78\n2. \"Product Inventory Reconciliation\" - $178.92\n3. \"Marketing Campaign Attribution\" - $154.23\n4. \"Daily User Activity Report\" - $124.56\n5. \"Sales Pipeline Forecast\" - $89.34";
-    }
-    if (lowerQuestion.includes("long") || lowerQuestion.includes("slow") || lowerQuestion.includes("performance")) {
-      return "Here are your 3 longest-running queries:\n\n1. \"Full Customer History Analysis\" - 45 minutes avg. run time\n2. \"Product Inventory Reconciliation\" - 28 minutes avg. run time\n3. \"Marketing Attribution Model\" - 17 minutes avg. run time\n\nWould you like optimization suggestions for any of these?";
+    if (lowerQuestion.includes("expensive") || lowerQuestion.includes("costliest")) {
+      return `Here are your top 5 costliest queries this month:
+
+1. "Customer Behavior Analytics" 
+   - Cost: $215.78/month
+   - Scans 2.3TB daily
+   - Marketing department
+   - ROI Score: Medium
+   - Optimization potential: 35%
+
+2. "Product Inventory Reconciliation"
+   - Cost: $178.92/month
+   - Scans 1.8TB daily
+   - Operations department
+   - ROI Score: High
+   - Optimization potential: 25%
+
+3. "Marketing Campaign Attribution"
+   - Cost: $154.23/month
+   - Scans 1.2TB daily
+   - Marketing department
+   - ROI Score: High
+   - Optimization potential: 40%
+
+4. "Daily User Activity Report"
+   - Cost: $124.56/month
+   - Scans 950GB daily
+   - Analytics department
+   - ROI Score: Medium
+   - Optimization potential: 30%
+
+5. "Sales Pipeline Forecast"
+   - Cost: $89.34/month
+   - Scans 750GB daily
+   - Sales department
+   - ROI Score: High
+   - Optimization potential: 20%
+
+Would you like to:
+1. See optimization recommendations for any query?
+2. View the SQL for these queries?
+3. Get a detailed cost breakdown?`;
     }
     
-    // Default query response
-    return "You currently have 182 active queries running across your projects. Your most frequently run queries are from the Marketing and Sales departments.";
-  }
-  
-  if (lowerQuestion.includes("optimize") || lowerQuestion.includes("optimization") || lowerQuestion.includes("improve")) {
-    return "Based on your current BigQuery usage, here are 3 key optimization opportunities:\n\n1. Add date-based partitioning to the 'customer_events' table to reduce query costs by up to 85%\n2. Implement query result caching for reports that run frequently but use relatively static data\n3. Rewrite the 'daily_user_activity' query to avoid cross joins, potentially saving $320/month";
+    if (lowerQuestion.includes("optimize") || lowerQuestion.includes("optimization")) {
+      return `Based on analysis of your query patterns, here are the top optimization opportunities:
+
+1. Customer Events Table Partitioning
+   - Current cost: $420.56/month
+   - Potential savings: 85%
+   - Implementation: Medium complexity
+   Example SQL:
+   ALTER TABLE customer_events
+   SET OPTIONS (
+     partition_by = DATE(timestamp_field),
+     partition_expiration_days = 90
+   )
+
+2. Daily User Activity Query
+   - Current cost: $320.45/month
+   - Potential savings: 72%
+   - Current query pattern:
+   SELECT * FROM users u CROSS JOIN events e
+   WHERE u.last_active_date = CURRENT_DATE()
+   
+   - Optimized version:
+   SELECT * FROM users u 
+   INNER JOIN events e ON u.id = e.user_id
+   WHERE u.last_active_date = CURRENT_DATE()
+
+3. Implement Query Result Caching
+   - Affected queries: 12
+   - Potential savings: $215.78/month
+   - Add to queries:
+   /* @cache_ttl=3600 */
+
+Would you like me to:
+1. Generate the full implementation SQL for any of these?
+2. Show you the impact analysis?
+3. Help prioritize these optimizations?`;
+    }
   }
   
   if (lowerQuestion.includes("roi") || lowerQuestion.includes("return on investment")) {
-    if (lowerQuestion.includes("department") || lowerQuestion.includes("breakdown")) {
-      return "Here's your ROI breakdown by department:\n\n- Marketing: 87/100 (High ROI)\n- Sales: 82/100 (High ROI)\n- Customer Success: 76/100 (Medium ROI)\n- Operations: 74/100 (Medium ROI)\n- Analytics: 58/100 (Low ROI)\n\nMarketing has the best ROI due to their direct connection between queries and campaign performance. Analytics has several queries with unspecified business purposes that are lowering their score.";
-    }
-    
-    return "Your overall data ROI score is 78/100. Here's the breakdown:\n\n- 42% of your queries have high ROI\n- 35% have medium ROI\n- 23% have low or unknown ROI\n\nThe Marketing department has the highest ROI for their queries, while Analytics has several queries with unspecified business purposes.";
-  }
-  
-  if (lowerQuestion.includes("partition") || lowerQuestion.includes("table")) {
-    return "Based on query patterns and data volume, these tables would benefit most from partitioning:\n\n1. customer_events (2.3TB) - Potential savings: 85%\n2. product_interactions (1.7TB) - Potential savings: 72%\n3. marketing_impressions (1.1TB) - Potential savings: 68%\n\nWould you like me to generate the SQL statements to add partitioning to any of these tables?";
+    return `Your overall data ROI score is 78/100. Here's the detailed breakdown:
+
+Department ROI Analysis:
+1. Marketing: 87/100 (⭐ High ROI)
+   - Strong connection to revenue
+   - Clear business metrics
+   - Well-optimized queries
+
+2. Sales: 82/100 (⭐ High ROI)
+   - Direct pipeline impact
+   - Regular query optimization
+   - Good data freshness
+
+3. Customer Success: 76/100 (📈 Medium ROI)
+   - Good retention metrics
+   - Some redundant queries
+   - Opportunity to reduce data scans
+
+4. Operations: 74/100 (📈 Medium ROI)
+   - Essential business processes
+   - Some unoptimized tables
+   - High query frequency
+
+5. Analytics: 58/100 (⚠️ Low ROI)
+   - Several undefined purposes
+   - Large historical scans
+   - Duplicate reporting
+
+Recommendations:
+1. Document business impact for Analytics queries
+2. Implement result caching for reports
+3. Archive unused historical data
+
+Would you like a detailed plan for improving any department's ROI score?`;
   }
   
   if (lowerQuestion.includes("save") && (lowerQuestion.includes("money") || lowerQuestion.includes("cost"))) {
-    return "Your biggest cost-saving opportunities are:\n\n1. Add partitioning to large tables: $875/month\n2. Optimize the 'Customer Behavior Analytics' query: $320/month\n3. Implement query caching for reporting workflows: $215/month\n4. Reduce frequency of certain batch jobs: $165/month\n\nTotal potential monthly savings: $1,575 (approximately 35% of your current spend)";
+    return `I've identified several cost-saving opportunities totaling $1,575/month:
+
+1. Table Partitioning: $875/month savings
+   - customer_events: $420 savings
+   - product_events: $285 savings
+   - marketing_data: $170 savings
+   Implementation time: 2-3 hours
+   Risk level: Low
+
+2. Query Optimization: $535/month savings
+   - Fix cross joins: $320 savings
+   - Add proper filters: $215 savings
+   Implementation time: 4-6 hours
+   Risk level: Medium
+
+3. Caching Strategy: $165/month savings
+   - Report queries: $95 savings
+   - Dashboard queries: $70 savings
+   Implementation time: 1-2 hours
+   Risk level: Low
+
+Priority order:
+1. Implement caching (Quick win)
+2. Add table partitioning (Best ROI)
+3. Optimize queries (Requires testing)
+
+Would you like me to:
+1. Generate implementation SQL?
+2. Create a rollout schedule?
+3. Show detailed cost analysis?`;
   }
   
   // Default fallback response
-  return "I don't have specific information about that, but I can help you analyze your BigQuery spending, identify expensive queries, suggest optimizations, and track ROI of your data investments. Could you ask me something more specific about these areas?";
+  return `I understand you're asking about "${question}". To provide the most accurate information, could you specify:
+
+1. The time period you're interested in?
+2. Any specific projects or departments?
+3. Whether you want cost, performance, or ROI metrics?
+
+I can help you with:
+- Cost analysis and optimization
+- Query performance improvements
+- ROI tracking and enhancement
+- Best practices implementation
+
+Just let me know what specific aspect you'd like to explore!`;
 };
 
 // Mock notifications data
@@ -1482,7 +1669,7 @@ function App() {
                             <XAxis type="number" hide />
                             <YAxis type="category" dataKey="name" hide />
                             <Tooltip 
-                              formatter={(value) => [`$${value.toFixed(2)}`, 'Monthly Savings']}
+                              formatter={(value: number) => [`$${value.toFixed(2)}`, 'Monthly Savings']}
                               labelFormatter={() => ''}
                             />
                             <Bar dataKey="monthlySavings" fill="#4ade80" radius={[0, 4, 4, 0]} barSize={8} />
@@ -1633,7 +1820,7 @@ function App() {
                                 </div>
                                 <div>
                                   <p className="text-xs text-gray-500">Monthly Savings</p>
-                                  <p className="font-medium text-green-600">${opt.monthlySavings.toFixed(2)}</p>
+                                  <p className="font-medium text-green-600">${typeof opt.monthlySavings === 'number' ? Number(opt.monthlySavings).toFixed(2) : '0.00'}</p>
                                 </div>
                                 <div>
                                   <p className="text-xs text-gray-500">Implementation</p>
