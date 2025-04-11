@@ -42,6 +42,16 @@ import {
   Scatter, ScatterChart
 } from 'recharts';
 import { format, subDays, addDays, startOfMonth, endOfMonth } from 'date-fns';
+import HeatMap from 'react-heatmap-grid';
+
+// Add type declaration at the top of the file
+declare module 'react-heatmap-grid';
+
+interface HeatmapData {
+  data: number[][];
+  xLabels: string[];
+  yLabels: string[];
+}
 
 // Error Boundary Component
 class ErrorBoundaryComponent extends React.Component<
@@ -164,17 +174,16 @@ const generateSyntheticData = () => {
   ];
 
   // Query execution time heatmap data
-  const generateHeatmapData = () => {
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+  const generateHeatmapData = (): HeatmapData => {
+    const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     
-    return days.flatMap(day => 
+    // Create a 2D array for the heatmap data
+    const data = days.map(day => 
       hours.map(hour => {
-        // Simulate more Grafana-like patterns
-        let baseValue = 0;
-        
         // Create wave patterns throughout the day
-        const timeOfDay = Math.sin((hour / 24) * Math.PI * 2) * 50 + 50;
+        const hourNum = parseInt(hour);
+        const timeOfDay = Math.sin((hourNum / 24) * Math.PI * 2) * 50 + 50;
         
         // Add weekly patterns
         const weekdayFactor = day === 'Sat' || day === 'Sun' ? 0.3 : 1;
@@ -183,22 +192,24 @@ const generateSyntheticData = () => {
         const noise = Math.random() * 30;
         
         // Combine factors
-        if (hour >= 9 && hour <= 17 && day !== 'Sat' && day !== 'Sun') {
+        let baseValue = 0;
+        if (hourNum >= 9 && hourNum <= 17 && day !== 'Sat' && day !== 'Sun') {
           baseValue = (timeOfDay + noise) * weekdayFactor * 1.5;
-        } else if ((hour >= 7 && hour <= 19)) {
+        } else if (hourNum >= 7 && hourNum <= 19) {
           baseValue = (timeOfDay + noise) * weekdayFactor;
         } else {
           baseValue = (timeOfDay + noise) * weekdayFactor * 0.5;
         }
         
-        return {
-          day,
-          hour: `${hour}:00`,
-          value: Math.round(Math.max(0, Math.min(100, baseValue))),
-          queries: Math.round(baseValue / 3)
-        };
+        return Math.round(Math.max(0, Math.min(100, baseValue)));
       })
     );
+
+    return {
+      data,
+      xLabels: hours,
+      yLabels: days
+    };
   };
   
   const queryHeatmapData = generateHeatmapData();
@@ -1188,77 +1199,36 @@ function App() {
                     
                     <div className="bg-white rounded-lg shadow p-4 md:p-6">
                       <h3 className="font-semibold mb-4">Query Execution Time Heatmap</h3>
-                      <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <ScatterChart
-                            margin={{ top: 10, right: 10, bottom: 20, left: 40 }}
-                          >
-                            <CartesianGrid opacity={0.1} />
-                            <XAxis 
-                              type="category"
-                              dataKey="hour"
-                              name="Hour"
-                              tick={{ fontSize: 10 }}
-                              tickFormatter={(value) => value.split(':')[0]}
-                              interval={2}
-                            />
-                            <YAxis 
-                              type="category"
-                              dataKey="day"
-                              name="Day"
-                              tick={{ fontSize: 11 }}
-                              width={35}
-                              reversed
-                            />
-                            <Tooltip 
-                              cursor={false}
-                              formatter={(value, name) => {
-                                return [`${value} queries`, name === 'value' ? 'Activity' : ''];
-                              }}
-                              contentStyle={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                                border: 'none',
-                                borderRadius: '4px',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                                padding: '8px'
-                              }}
-                            />
-                            <Scatter 
-                              name="value"
-                              data={syntheticData.queryHeatmapData}
-                              shape={(props) => {
-                                const { x, y, width, height, value } = props;
-                                return (
-                                  <rect
-                                    x={x - 10}
-                                    y={y - 10}
-                                    width={20}
-                                    height={20}
-                                    fill={
-                                      value > 90 ? '#166534' : // dark green
-                                      value > 75 ? '#22c55e' : // medium green
-                                      value > 60 ? '#86efac' : // light green
-                                      value > 45 ? '#fef9c3' : // light yellow
-                                      value > 30 ? '#fca5a5' : // light red
-                                      value > 15 ? '#ef4444' : // medium red
-                                      '#991b1b'   // dark red
-                                    }
-                                    opacity={0.85}
-                                  />
-                                );
-                              }}
-                            />
-                          </ScatterChart>
-                        </ResponsiveContainer>
+                      <div style={{ height: '400px', width: '100%' }}>
+                        <HeatMap
+                          xLabels={syntheticData.queryHeatmapData.xLabels}
+                          yLabels={syntheticData.queryHeatmapData.yLabels}
+                          data={syntheticData.queryHeatmapData.data}
+                          xLabelsLocation="bottom"
+                          xLabelsVisibility={(index: number) => index % 2 === 0}
+                          yLabelWidth={35}
+                          cellStyle={(background: string, value: number, min: number, max: number) => ({
+                            background: `rgb(${Math.floor(255 - (value / 100) * 255)}, ${Math.floor(255 - (value / 100) * 255)}, ${Math.floor(255 - (value / 100) * 255)})`,
+                            fontSize: '11px',
+                            color: value > 50 ? '#fff' : '#000',
+                            padding: '4px',
+                            textAlign: 'center',
+                            cursor: 'pointer'
+                          })}
+                          cellRender={(value: number) => value ? value.toString() : ''}
+                          title={(value: number) => `${value} queries`}
+                        />
                       </div>
                       <div className="flex items-center justify-center mt-2 text-xs text-gray-500">
                         <span>less activity</span>
                         <div className="flex mx-2">
-                          {['#991b1b', '#ef4444', '#fca5a5', '#fef9c3', '#86efac', '#22c55e', '#166534'].map((color, i) => (
+                          {Array.from({ length: 5 }, (_, i) => (
                             <div
                               key={i}
                               className="w-4 h-4"
-                              style={{ backgroundColor: color }}
+                              style={{
+                                backgroundColor: `rgb(${255 - (i * 51)}, ${255 - (i * 51)}, ${255 - (i * 51)})`
+                              }}
                             />
                           ))}
                         </div>
